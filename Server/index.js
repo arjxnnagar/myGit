@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import http from "http";
 import { Server } from "socket.io";
-
+import mainRouter from "./routes/main.router.js";
 
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
@@ -20,6 +20,7 @@ import revertRepo from "./controllers/revert.js";
 import console from "console";
 
 
+
 const startServer = async ()=>{
   const app = express();
   const port = process.env.PORT || 3000;
@@ -27,6 +28,7 @@ const startServer = async ()=>{
   app.use(bodyParser.json());
   app.use(express.json());
   app.use(cors({origin:"*"}));
+  app.use("/",mainRouter);
 
   const mongoURI = process.env.MONGO_DB_URI;
   const connectDB = async () => {
@@ -40,10 +42,6 @@ const startServer = async ()=>{
     }
   };
   connectDB();
-
-  app.get("/server",(req,res)=>{
-    res.send("welcome to server");
-  })
 
   const httpServer = http.createServer(app);
   const io = new Server(httpServer,{
