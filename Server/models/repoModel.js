@@ -18,7 +18,7 @@ const RepositorySchema = new Schema({
         type:Boolean
     },
     owner:{
-        types:Schema.Types.ObjectId,
+        type:Schema.Types.ObjectId,
         ref:"User",
         required:true,
     },

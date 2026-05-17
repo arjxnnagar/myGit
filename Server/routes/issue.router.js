@@ -1,7 +1,7 @@
 import express from "express";
 import {
     createIssue,
-    updateIssue,
+    updateIssuebyId,
     deleteIssuebyId,
     getAllIssue,
     getIssuebyId,
@@ -11,9 +11,10 @@ const issueRouter = express.Router();
 
 
 issueRouter.post("/create",createIssue);
-issueRouter.put("/update",updateIssue);
+issueRouter.put("/update/:id",updateIssuebyId);
 issueRouter.delete("/delete/:id",deleteIssuebyId);
 issueRouter.get("/all",getAllIssue);
 issueRouter.get("/:id",getIssuebyId);
 
 export default issueRouter;
+
