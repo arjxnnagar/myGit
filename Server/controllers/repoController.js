@@ -1,7 +1,7 @@
 import express from "express";
 import Repository from "../models/repoModel.js";
 import User from "../models/userModel.js";
-import Issue from "../models/userModel.js";
+import Issue from "../models/issueModel.js";
 import mongoose from "mongoose";
 
 const createRepository = async (req, res) => {
@@ -41,7 +41,7 @@ const getAllRepositories = async (req, res) => {
     res.json(repoData);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Error in Server" });
+    res.status(500).json({ message: "Error in Server during fetching all repo" });
   }
 };
 
@@ -55,7 +55,7 @@ const fetchRepositoryById = async (req, res) => {
     res.status(200).json({ message: "Repo fetched by Id", result });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Error in Server" });
+    res.status(500).json({ message: "Error in Server during fetching Repo by Id" });
   }
 };
 
@@ -63,11 +63,11 @@ const fetchRepositoryByName = async (req, res) => {
   const name = req.params.name;
 
   try {
-    const result = await Repository.find({ name: name }).populate("owner");
+    const result = await Repository.find({ name: name }).populate("owner").populate("issues");
     res.status(200).json({ message: "Repo fetched by name", result });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Error in Server" });
+    res.status(500).json({ message: "Error in Server during Fetching repo by name" });
   }
 };
 
@@ -82,10 +82,12 @@ const fetchRepositoryForCurrentUser = async (req, res) => {
       res.status(404).json({ message: "No repo for this user" });
     }
 
-    res.status(200).json({ message: "Repo fetched by Id", result });
+    res.status(200).json({ message: "Repo fetched by UserId", result });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Error in Server" });
+    res
+      .status(500)
+      .json({ message: "Error in Server during Fetching repo by UserId " });
   }
 };
 
@@ -111,9 +113,10 @@ const updateRepositoryById = async (req, res) => {
     res.status(200).json({ message: "Repo updated by Id", repo });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Error in Server" });
+    res.status(500).json({ message: "Error in Server during Updating repo by Id" });
   }
 };
+
 const toggleVisibilityById = async (req, res) => {
   const id = req.params.id;
 
@@ -122,7 +125,7 @@ const toggleVisibilityById = async (req, res) => {
 
     if (!repo) {
       return res.status(404).json({
-        message: "No repo to toggle",
+        message: "No repo to toggle Visibility",
       });
     }
 
@@ -131,12 +134,12 @@ const toggleVisibilityById = async (req, res) => {
     const updatedRepo = await repo.save();
 
     res.status(200).json({
-      message: "Repo toggled",
+      message: "Repo Visibility toggled",
       repo: updatedRepo,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Error in Server" });
+    res.status(500).json({ message: "Error in Server during Toggeling Visibility" });
   }
 };
 const deleteRepositoryById = async (req, res) => {
@@ -149,10 +152,9 @@ const deleteRepositoryById = async (req, res) => {
     }
 
     res.status(200).json({message:"Repo deleted succesfully"});
-
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Error in Server" });
+    res.status(500).json({ message: "Error in Server during Repo deletion" });
   }
 };
 

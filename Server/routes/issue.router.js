@@ -10,7 +10,7 @@ import {
 const issueRouter = express.Router();
 
 
-issueRouter.post("/create",createIssue);
+issueRouter.post("/create/:repoid",createIssue);
 issueRouter.put("/update/:id",updateIssuebyId);
 issueRouter.delete("/delete/:id",deleteIssuebyId);
 issueRouter.get("/all",getAllIssue);

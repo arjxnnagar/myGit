@@ -13,7 +13,7 @@ const IssueSchema = new Schema({
     status:{
         type:String,
         enum:["open","closed"],
-        default:["open"],
+        default:"open",
     },
     repository:{
         type:Schema.Types.ObjectId,

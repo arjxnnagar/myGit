@@ -6,12 +6,15 @@ dotenv.config();
 
 const signup = async (req, res) => {
   const { username, email, password } = req.body;
-        
+
   try {
     if (!username || !email || !password) {
       return res.status(400).json({ message: "Missing Credantials" });
     }
-    const user = await User.findOne({ username });
+    let user = await User.findOne({ username });
+    if (!user) {
+      user = await User.findOne({ email });
+    }
 
     if (user) {
       return res.status(400).json({ message: "User Already exists" });
@@ -63,7 +66,11 @@ const login = async (req, res) => {
       process.env.JWT_SECRET_KEY,
       { expiresIn: "1h" },
     );
-    res.json({ success: true, userData, token, message: "Login succesfull" });
+
+    const userObj = userData.toObject();
+    delete userObj.password;
+
+    res.json({ success: true, userObj, token, message: "Login succesfull" });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: "Login failed due to Server" });
@@ -73,10 +80,17 @@ const login = async (req, res) => {
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
-    return res.status(200).json(users);
+    const userdata = users.map((user) => {
+      const userObj = user.toObject();
+
+      delete userObj.password;
+
+      return userObj;
+    });
+    res.status(200).json({userdata,message:"All User fetched"});
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "Fetching failed due to Server" });
+    return res.status(500).json({ message: "Fetching of all users Failed due to Server" });
   }
 };
 
@@ -85,7 +99,7 @@ const getUserProfile = async (req, res) => {
 
   try {
     const user = await User.findById(userID).select("-password");
-    return res.status(200).json({ user });
+    return res.status(200).json({ user ,message:"User fetched by Id" });
   } catch (err) {
     console.error(err);
     res
@@ -114,7 +128,7 @@ const updateUserProfile = async (req, res) => {
       returnDocument: "after",
     }).select("-password");
 
-    if (!user) {
+    if (!user){
       return res.status(404).json({
         message: "User not found",
       });
