@@ -8,8 +8,7 @@ const pushRepo = async ()=>{
     const repoPath = path.resolve(process.cwd(),".myGit");
     const commitsPath = path.join(repoPath,"commits");
 
-    try {   
-        
+    try {
         const commitDirs = await fs.readdir(commitsPath);
 
         for(const commitDir of commitDirs){
