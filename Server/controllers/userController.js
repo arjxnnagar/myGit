@@ -6,10 +6,10 @@ dotenv.config();
 
 const signup = async (req, res) => {
   const { username, email, password } = req.body;
-
+        
   try {
     if (!username || !email || !password) {
-      return res.status(400).json({ message: "Missing Details" });
+      return res.status(400).json({ message: "Missing Credantials" });
     }
     const user = await User.findOne({ username });
 
