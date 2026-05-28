@@ -35,7 +35,7 @@ const signup = async (req, res) => {
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_KEY, {
       expiresIn: "1h",
     });
-    res.json({ token });
+    res.json({ token, userId: newUser._id });
   } catch (err) {
     console.error("Error in signing up the user:", err);
     res.status(500).json({ message: "Server Error" });
@@ -70,7 +70,13 @@ const login = async (req, res) => {
     const userObj = userData.toObject();
     delete userObj.password;
 
-    res.json({ success: true, userObj, token, message: "Login succesfull" });
+    res.json({
+      success: true,
+      userObj,
+      token,
+      userId: userData._id,
+      message: "Login succesfull",
+    });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: "Login failed due to Server" });
@@ -87,10 +93,12 @@ const getAllUsers = async (req, res) => {
 
       return userObj;
     });
-    res.status(200).json({userdata,message:"All User fetched"});
+    res.status(200).json({ userdata, message: "All User fetched" });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "Fetching of all users Failed due to Server" });
+    return res
+      .status(500)
+      .json({ message: "Fetching of all users Failed due to Server" });
   }
 };
 
@@ -99,7 +107,7 @@ const getUserProfile = async (req, res) => {
 
   try {
     const user = await User.findById(userID).select("-password");
-    return res.status(200).json({ user ,message:"User fetched by Id" });
+    return res.status(200).json({ user, message: "User fetched by Id" });
   } catch (err) {
     console.error(err);
     res
@@ -128,7 +136,7 @@ const updateUserProfile = async (req, res) => {
       returnDocument: "after",
     }).select("-password");
 
-    if (!user){
+    if (!user) {
       return res.status(404).json({
         message: "User not found",
       });

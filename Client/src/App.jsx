@@ -1,47 +1,43 @@
-import React ,{useEffect} from 'react'
-import { Route,Routes, useNavigate } from 'react-router-dom'
-import Dashboard from './pages/Dashboard'
-import Login from './pages/Login'
-import Signup from './pages/Signup'
-import Profile from './pages/Profile'
+import React, { useEffect } from "react";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
+import Dashboard from "./pages/Dashboard.jsx";
+import Login from "./pages/Login.jsx";
+import Signup from "./pages/Signup.jsx";
+import Profile from "./pages/Profile.jsx";
 
-import { useAuth } from './authContext'
+import  useAuth  from "./context/useAuth.jsx";
 
 const App = () => {
-  
-   const { currentUser, setCurrentUser } = useAuth();
-   const navigate = useNavigate();
-  
-  useEffect(()=>{
+  const { currentUser, setCurrentUser } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
+  useEffect(() => {
     const userId = localStorage.getItem("userId");
 
-    if(!currentUser && userId){
+    if (!currentUser && userId) {
       setCurrentUser(userId);
     }
-    
-    if(!userId && !["/login","/signup"].includes(window.location.pathname)){
+
+    if (!userId && !["/login", "/signup"].includes(location.pathname)) {
       navigate("/login");
     }
-    if (userId && (window.location.pathname == "/login" || window.location.pathname == "/signup")) {
+    if (
+      userId &&
+      (location.pathname == "/login" || location.pathname == "/signup")
+    ) {
       navigate("/");
     }
+  }, [currentUser, navigate, setCurrentUser, location.pathname]);
 
-  },[currentUser,navigate,setCurrentUser])
-
-
-  
   return (
-
-    <div>
       <Routes>
-        <Route path="/" element={<Dashboard/>}/>
-        <Route path="/login" element={<Login/>}/>
-        <Route path="/signup" element={<Signup/>}/>
-        <Route path="/profile" element={<Profile/>}/>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
-    </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
