@@ -114,7 +114,7 @@ const Profile = () => {
 
               setCurrentUser(null);
 
-              window.location.href = "/auth";
+              window.location.href = "/login";
             }}
             className="
               mt-8
