@@ -10,11 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@primer/primitives": "^11.9.0",
+    "@primer/react": "^38.25.0",
     "@tailwindcss/vite": "^4.3.0",
+    "@uiw/react-heat-map": "^2.3.4",
     "axios": "^1.16.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.15.1",
+    "styled-components": "^6.4.2",
     "tailwindcss": "^4.3.0"
   },
   "devDependencies": {
